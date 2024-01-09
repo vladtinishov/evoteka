@@ -15,6 +15,14 @@ $config = [
         'class' => 'app\components\TokenMiddleware',
         'except' => ['auth/*'],
     ],
+    'as adminFilter' => [
+        'class' => 'app\components\AdminMiddleware',
+        'except' => ['auth/*'],
+    ],
+    'as adminAndManagerFilter' => [
+        'class' => 'app\components\AdminAndManagerMiddleware',
+        'except' => ['auth/*'],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
