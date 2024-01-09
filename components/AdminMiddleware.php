@@ -17,6 +17,7 @@ class AdminMiddleware extends ActionFilter
         Yii::$app->response->format = Response::FORMAT_JSON;
         $user = Yii::$app->request->getQueryParam('user');
         $user = new User($user);
+
         if (!$user->isAdmin()) {
             Yii::$app->response->statusCode = 403;
             Yii::$app->response->data = ['error' => 'Access Denied'];

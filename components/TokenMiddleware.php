@@ -31,7 +31,7 @@ class TokenMiddleware extends ActionFilter
                 }
             }
 
-            throw new \Exception('');
+            throw new \Exception();
         } catch (\Exception $e) {
             Yii::$app->response->statusCode = 401;
             Yii::$app->response->data = ['error' => 'Unauthorized'];

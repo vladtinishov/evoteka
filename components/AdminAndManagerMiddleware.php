@@ -18,7 +18,7 @@ class AdminAndManagerMiddleware extends ActionFilter
         $user = Yii::$app->request->getQueryParam('user');
         $user = new User($user);
 
-        if (!$user->isAdmin() || !$user->isManager()) {
+        if (!$user->isAdmin() && !$user->isManager()) {
             Yii::$app->response->statusCode = 403;
             Yii::$app->response->data = ['error' => 'Access Denied'];
             return false;
