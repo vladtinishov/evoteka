@@ -11,18 +11,18 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'as tokenFilter' => [
-        'class' => 'app\components\TokenMiddleware',
-        'except' => ['auth/*'],
-    ],
-    'as adminFilter' => [
-        'class' => 'app\components\AdminMiddleware',
-        'except' => ['auth/*'],
-    ],
-    'as adminAndManagerFilter' => [
-        'class' => 'app\components\AdminAndManagerMiddleware',
-        'except' => ['auth/*'],
-    ],
+//    'as tokenFilter' => [
+//        'class' => 'app\components\TokenMiddleware',
+//        'except' => ['auth/*'],
+//    ],
+//    'as adminFilter' => [
+//        'class' => 'app\components\AdminMiddleware',
+//        'except' => ['auth/*'],
+//    ],
+//    'as adminAndManagerFilter' => [
+//        'class' => 'app\components\AdminAndManagerMiddleware',
+//        'except' => ['auth/*'],
+//    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -72,6 +72,11 @@ $config = [
                 'orders/create' => 'order/create',
                 'orders/<id:\d+>/update' => 'order/update',
                 'orders/<id:\d+>/delete' => 'order/delete',
+
+                'users' => 'user/index',
+                'users/create' => 'user/create',
+                'users/<id:\d+>/update' => 'user/update',
+                'users/<id:\d+>/delete' => 'user/delete',
             ],
         ],
     ],
