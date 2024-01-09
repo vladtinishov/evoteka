@@ -46,14 +46,4 @@ class Product extends \yii\db\ActiveRecord
             'description' => 'Description',
         ];
     }
-
-    /**
-     * Gets query for [[OrderProducts]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderProducts()
-    {
-        return $this->hasMany(OrderProduct::class, ['product_id' => 'id']);
-    }
 }
