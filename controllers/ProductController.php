@@ -101,6 +101,12 @@ class ProductController extends Controller
 
         try {
             $model->save();
+            if (count($model->errors)) {
+                Yii::$app->response->statusCode = 500;
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['errors' => $model->errors];
+            }
+
             return $model->attributes;
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
@@ -134,6 +140,12 @@ class ProductController extends Controller
 
         try {
             $model->save();
+            if (count($model->errors)) {
+                Yii::$app->response->statusCode = 500;
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['errors' => $model->errors];
+            }
+
             return $model->attributes;
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
