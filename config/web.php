@@ -62,11 +62,16 @@ $config = [
                 'auth/get-token' => 'auth/get-token',
                 'auth/register' => 'auth/register',
                 'users/index' => 'user/index',
-                'products/index' => 'product/index',
+
                 'products' => 'product/index',
                 'products/create' => 'product/create',
                 'products/<id:\d+>/update' => 'product/update',
                 'products/<id:\d+>/delete' => 'product/delete',
+
+                'orders' => 'order/index',
+                'orders/create' => 'order/create',
+                'orders/<id:\d+>/update' => 'order/update',
+                'orders/<id:\d+>/delete' => 'order/delete',
             ],
         ],
     ],
