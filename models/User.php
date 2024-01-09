@@ -17,6 +17,10 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public const CLIENT = 3;
+    public const MANAGER = 2;
+    public const ADMIN = 1;
+
     public string $access_token;
     /**
      * {@inheritdoc}
@@ -61,5 +65,20 @@ class User extends \yii\db\ActiveRecord
     public function getOrders()
     {
         return $this->hasMany(Order::class, ['user_id' => 'id']);
+    }
+
+    public function isClient(): bool
+    {
+        return $this->role == self::CLIENT;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role == self::MANAGER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role == self::ADMIN;
     }
 }
