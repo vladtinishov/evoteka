@@ -11,6 +11,10 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'as tokenFilter' => [
+        'class' => 'app\components\TokenMiddleware',
+        'except' => ['auth/*'],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -49,6 +53,7 @@ $config = [
             'rules' => [
                 'auth/get-token' => 'auth/get-token',
                 'auth/register' => 'auth/register',
+                'users/index' => 'user/index',
             ],
         ],
     ],
