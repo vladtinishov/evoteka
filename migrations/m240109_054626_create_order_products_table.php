@@ -15,6 +15,7 @@ class m240109_054626_create_order_products_table extends Migration
         $this->createTable('order_product', [
             'order_id' => $this->integer()->notNull(),
             'product_id' => $this->integer()->notNull(),
+            'quantity' => $this->integer()->notNull(),
         ]);
 
         $this->addForeignKey('fk-order_product-order_id', 'order_product', 'order_id', 'order', 'id', 'CASCADE');

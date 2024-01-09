@@ -3,11 +3,13 @@
 namespace app\controllers;
 
 use app\models\Order;
+use app\models\OrderProduct;
 use PHPUnit\Exception;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use yii\web\JsonParser;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -92,7 +94,8 @@ class OrderController extends Controller
      */
     public function actionCreate(): array
     {
-        $userId = Yii::$app->request->post('user_id');
+        $requestData = Yii::$app->request->post();
+        $userId = $requestData['user_id'];
 
         $model = new Order();
         $model->user_id = $userId;
@@ -103,6 +106,10 @@ class OrderController extends Controller
                 Yii::$app->response->statusCode = 500;
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return ['errors' => $model->errors];
+            }
+
+            if (isset($requestData['products']) && is_array($requestData['products'])) {
+                $this->saveOrderProducts($requestData['products'], $model->id);
             }
 
             return $model->attributes;
@@ -122,8 +129,9 @@ class OrderController extends Controller
      */
     public function actionUpdate(int $id): array
     {
-        $userId = Yii::$app->request->post('user_id');
-        $paymentStatus = Yii::$app->request->post('payment_status');
+        $requestData = Yii::$app->request->post();
+        $userId = $requestData['user_id'];
+        $paymentStatus = $requestData['payment_status'] ?? 0;
 
         try {
             $model = $this->findModel($id);
@@ -144,11 +152,35 @@ class OrderController extends Controller
                 return ['errors' => $model->errors];
             }
 
+            if (isset($requestData['products']) && is_array($requestData['products'])) {
+                OrderProduct::deleteAll(['order_id' => $model->id]);
+                $this->saveOrderProducts($requestData['products'], $model->id);
+            }
+
             return $model->attributes;
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['error' => 'Error while saving.'];
+            return ['error' => 'Error during saving.'];
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function saveOrderProducts($products, $orderId)
+    {
+        foreach ($products as $productData) {
+            $orderProduct = new OrderProduct();
+            $orderProduct->order_id = $orderId;
+            $orderProduct->product_id = $productData['id'];
+            $orderProduct->quantity = $productData['quantity'];
+
+            $orderProduct->save();
+
+            if (count($orderProduct->errors)) {
+                throw new \Exception('Error while saving order product');
+            }
         }
     }
 
