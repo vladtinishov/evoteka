@@ -3,16 +3,16 @@
 namespace app\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 
 /**
  * This is the model class for table "order".
  *
  * @property int $id
  * @property int $user_id
- * @property int $quantity
  * @property string $payment_status
  *
- * @property OrderProduct[] $orderProducts
  * @property User $user
  */
 class Order extends \yii\db\ActiveRecord
@@ -28,13 +28,14 @@ class Order extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['user_id', 'quantity', 'payment_status'], 'required'],
-            [['user_id', 'quantity'], 'default', 'value' => null],
-            [['user_id', 'quantity'], 'integer'],
+            [['user_id'], 'required'],
+            [['user_id'], 'default', 'value' => null],
+            [['user_id'], 'integer'],
             [['payment_status'], 'string', 'max' => 255],
+            [['payment_status'], 'default', 'value' => 0],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -47,7 +48,6 @@ class Order extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'quantity' => 'Quantity',
             'payment_status' => 'Payment Status',
         ];
     }
@@ -55,17 +55,19 @@ class Order extends \yii\db\ActiveRecord
     /**
      * Gets query for [[OrderProducts]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
-    public function getOrderProducts()
+    public function getProducts()
     {
-        return $this->hasMany(OrderProduct::class, ['order_id' => 'id']);
+        return $this->hasMany(Product::class, ['id' => 'product_id'])
+            ->viaTable('order_product', ['order_id' => 'id']);
     }
 
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUser()
     {

@@ -15,8 +15,7 @@ class m240109_053224_create_order_table extends Migration
         $this->createTable('order', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'quantity' => $this->integer()->notNull(),
-            'payment_status' => $this->string()->notNull(),
+            'payment_status' => $this->integer()->defaultValue(0), // 0 - не оплачено, 1 - оплачено
         ]);
 
         $this->addForeignKey('fk-order-user_id', 'order', 'user_id', 'user', 'id', 'CASCADE');
