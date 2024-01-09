@@ -17,6 +17,7 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public string $access_token;
     /**
      * {@inheritdoc}
      */
