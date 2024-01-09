@@ -17,7 +17,7 @@ class m240109_051113_create_user_table extends Migration
             'name' => $this->string(50)->notNull(),
             'login' => $this->string(50)->unique(),
             'password_hash' => $this->string()->notNull(),
-            'role' => $this->integer()->notNull(),
+            'role' => $this->integer()->notNull() // 1 - admin, 2 - manager, 3 - client,
         ]);
     }
 
