@@ -52,13 +52,13 @@ class AuthController extends \yii\web\Controller
 
     private function generateJwtToken($user): string
     {
-        $key = 'your-secret-key';
+        $key = $_ENV['SECRET_KEY'];
         $payload = [
             'user_id' => $user->id,
             'exp' => time() + 3600,
         ];
 
-        return JWT::encode($payload, $key, 'HS256');
+        return JWT::encode($payload, $key, $_ENV['TOKEN_ENCODE_ALG']);
     }
 
     public function actionRegister()
