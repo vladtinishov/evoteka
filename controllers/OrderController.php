@@ -15,6 +15,11 @@ use yii\filters\VerbFilter;
 use yii\web\Response;
 
 /**
+ * @SWG\Tag(
+ *   name="Order",
+ *   description="Operations about orders"
+ * )
+ *
  * OrderController implements the CRUD actions for Order model.
  */
 class OrderController extends Controller
@@ -52,6 +57,23 @@ class OrderController extends Controller
     }
 
     /**
+     * @SWG\Get(
+     *     path="/orders",
+     *     tags={"Order"},
+     *     summary="Lists all orders",
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="Resource not found"
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
+     *
      * Lists all Order models.
      *
      * @return array
@@ -72,8 +94,33 @@ class OrderController extends Controller
     }
 
     /**
-     * Displays a single Order model.
-     * @param int $id ID
+     * @SWG\Get(
+     *     path="/orders/{id}",
+     *     tags={"Order"},
+     *     summary="View order",
+     *     @SWG\Parameter(
+     *           name="id",
+     *           in="path",
+     *           type="integer",
+     *           description="ID of the order",
+     *           required=true
+     *       ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="Resource not found"
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
+     *
+     * Lists all Order models.
+     *
+     * @param $id
      * @return array
      */
     public function actionView($id): array
@@ -88,14 +135,51 @@ class OrderController extends Controller
     }
 
     /**
+     * @SWG\Post(
+     *     path="/orders/create",
+     *     tags={"Order"},
+     *     summary="Creates a new Order",
+     *     @SWG\Parameter(
+     *           name="body",
+     *           in="body",
+     *           required=true,
+     *           @SWG\Schema(
+     *               required={"user_id"},
+     *               @SWG\Property(property="user_id", type="integer"),
+     *               @SWG\Property(
+     *                   property="products",
+     *                   type="array",
+     *                   @SWG\Items(
+     *                       type="object",
+     *                       @SWG\Property(property="id", type="integer"),
+     *                       @SWG\Property(property="quantity", type="integer"),
+     *                   )
+     *               ),
+     *           )
+     *       ),
+     *     consumes={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Error during saving",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
+     *
      * Creates a new Order model.
-     * If creation is successful, the browser will return the new product as JSON.
+     * If creation is successful, the browser will return the new order as JSON.
      *
      * @return array
+     * @throws \Exception
      */
     public function actionCreate(): array
     {
-        $requestData = Yii::$app->request->post();
+        $requestData = Yii::$app->getRequest()->getBodyParams();
         $userId = $requestData['user_id'];
 
         $model = new Order();
@@ -122,11 +206,56 @@ class OrderController extends Controller
     }
 
     /**
-     * Updates an existing Order model.
-     * If update is successful, the browser will return the updated product as JSON.
+     * @SWG\Post(
+     *     path="/orders/{id}/update",
+     *     tags={"Order"},
+     *     summary="Creates a new Order",
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="integer",
+     *          description="ID of the order to update payment_status",
+     *          required=true
+     *      ),
+     *     @SWG\Parameter(
+     *           name="body",
+     *           in="body",
+     *           required=true,
+     *           @SWG\Schema(
+     *               required={"user_id"},
+     *               @SWG\Property(property="user_id", type="integer"),
+     *               @SWG\Property(
+     *                   property="products",
+     *                   type="array",
+     *                   @SWG\Items(
+     *                       type="object",
+     *                       @SWG\Property(property="id", type="integer"),
+     *                       @SWG\Property(property="quantity", type="integer"),
+     *                   )
+     *               ),
+     *           )
+     *       ),
+     *     consumes={"application/json"},
      *
-     * @param int $id ID
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Error during saving",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
+     *
+     * Creates a new Order model.
+     * If creation is successful, the browser will return the new order as JSON.
+     *
+     * @param int $id
      * @return array
+     * @throws \Exception
      */
     public function actionUpdate(int $id): array
     {
@@ -167,8 +296,39 @@ class OrderController extends Controller
     }
 
     /**
-     * Updates orders payment_status.
-     * If update is successful, the browser will return the updated product as JSON.
+     * @SWG\Post(
+     *     path="/orders/{id}/update-status",
+     *     tags={"Order"},
+     *     summary="Updates orders payment_status",
+     *     @SWG\Parameter(
+     *         name="id",
+     *         in="path",
+     *         type="integer",
+     *         description="ID of the order to update payment_status",
+     *         required=true
+     *     ),
+     *     @SWG\Parameter(
+     *         name="payment_status",
+     *         in="formData",
+     *         type="integer",
+     *         description="Payment status of the order",
+     *         required=true
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Error during saving",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
+     *
+     * Update orders payment_status.
+     * If update is successful, the browser will return the updated order as JSON.
      *
      * @param int $id ID
      * @return array
@@ -224,11 +384,24 @@ class OrderController extends Controller
     }
 
     /**
-     * Deletes an existing Order model.
-     * If deletion is successful, the browser will return success status as JSON.
-     *
-     * @param int $id ID
-     * @return array
+     * @SWG\Post(path="/orders/{id}/delete",
+     *     tags={"Order"},
+     *     summary="Deletes order",
+     *     @SWG\Parameter(
+     *         name="id",
+     *         in="path",
+     *         type="integer",
+     *         description="ID of the order",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Order collection response",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionDelete($id): array
     {

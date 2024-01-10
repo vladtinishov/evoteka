@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $managerAccessExcepts = [
     'auth/*',
+    'site/*',
     'product/index',
     'product/view',
     'order/create',
@@ -22,7 +23,7 @@ $config = [
     ],
     'as tokenFilter' => [
         'class' => 'app\components\TokenMiddleware',
-        'except' => ['auth/*'],
+        'except' => ['auth/*', 'site/*',],
     ],
     'as adminFilter' => [
         'class' => 'app\components\AdminMiddleware',
@@ -42,6 +43,9 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'D_JV4nq-CYcMv769prrJhiuhOy7aBrEh',
             'enableCsrfValidation' => false,
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -94,10 +98,28 @@ $config = [
                 'users/<id:\d+>' => 'user/view',
                 'users/<id:\d+>/update' => 'user/update',
                 'users/<id:\d+>/delete' => 'user/delete',
+                'site/docs' => 'site/docs',
+                'site/json-schema' => 'site/json-schema',
             ],
         ],
     ],
     'params' => $params,
+    'modules' => [
+        'swagger' => [
+            'class' => \ignatenkovnikita\swagger\Module::class,
+            'path' => dirname(__DIR__) . '/views/swagger',
+            'isDisable' => function () {
+                return false;
+            },
+            'afterRender' => function ($content) {
+                $content = str_replace('{{host}}', 'http://evoteka.com', $content);
+                $content = str_replace('{{basePath}}', '/api/v1', $content);
+                return $content;
+            }
+        ],
+        // ... другие модули
+    ],
+
 ];
 
 if (YII_ENV_DEV) {

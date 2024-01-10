@@ -19,7 +19,11 @@
         "yiisoft/yii2-bootstrap5": "~2.0.2",
         "yiisoft/yii2-symfonymailer": "~2.0.3",
         "firebase/php-jwt": "^6.10",
-        "vlucas/phpdotenv": "^5.6"
+        "vlucas/phpdotenv": "^5.6",
+        "ignatenkovnikita/yii2-swagger": "dev-master",
+        "zircote/swagger-php": "2.*",
+        "yii2mod/yii2-swagger": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

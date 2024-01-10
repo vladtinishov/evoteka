@@ -13,7 +13,12 @@ use yii\filters\VerbFilter;
 use yii\web\Response;
 
 /**
- * ProductController implements the CRUD actions for Product model.
+ * @SWG\Tag(
+ *   name="Order",
+ *   description="Operations about orders"
+ * )
+ *
+ * OrderController implements the CRUD actions for Order model.
  */
 class ProductController extends Controller
 {
@@ -49,9 +54,24 @@ class ProductController extends Controller
     }
 
     /**
-     * Lists all Product models.
-     *
-     * @return array
+     * @SWG\Get(
+     *     path="/products",
+     *     tags={"Product"},
+     *     summary="Lists all Product models.",
+     *     description="",
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionIndex(): array
     {
@@ -69,9 +89,35 @@ class ProductController extends Controller
     }
 
     /**
-     * Displays a single Product model.
-     * @param int $id ID
+     * @param int $id
+     *
      * @return array
+     *
+     * @SWG\Get(
+     *     path="/products/{id}",
+     *     tags={"Product"},
+     *     summary="Displays a single Product model.",
+     *     description="",
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         name="id",
+     *         in="path",
+     *         type="integer",
+     *         description="ID of the product",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionView($id): array
     {
@@ -85,10 +131,41 @@ class ProductController extends Controller
     }
 
     /**
-     * Creates a new Product model.
-     * If creation is successful, the browser will return the new product as JSON.
-     *
      * @return array
+     *
+     * @SWG\Post(
+     *     path="/products/create",
+     *     tags={"Product"},
+     *     summary="Creates a new Product model.",
+     *     description="If creation is successful, the browser will return the new product as JSON.",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         type="string",
+     *         description="Product's name",
+     *         required=true,
+     *     ),
+     *     @SWG\Parameter(
+     *         name="login",
+     *         in="formData",
+     *         type="string",
+     *         description="Description's login",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Error during saving",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionCreate(): array
     {
@@ -116,11 +193,54 @@ class ProductController extends Controller
     }
 
     /**
-     * Updates an existing Product model.
-     * If update is successful, the browser will return the updated product as JSON.
+     * @param int $id
      *
-     * @param int $id ID
      * @return array
+     *
+     * @SWG\Put(
+     *     path="/products/{id}/update",
+     *     tags={"Product"},
+     *     summary="Updates an existing Product model.",
+     *     description="If update is successful, the browser will return the updated product as JSON.",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *     @SWG\Parameter(
+     *         in="path",
+     *         name="id",
+     *         type="integer",
+     *         description="ID of the product",
+     *         required=true,
+     *     ),
+     *     @SWG\Parameter(
+     *          name="name",
+     *          in="formData",
+     *          type="string",
+     *          description="Product's name",
+     *          required=true,
+     *      ),
+     *      @SWG\Parameter(
+     *          name="login",
+     *          in="formData",
+     *          type="string",
+     *          description="Description's login",
+     *          required=true,
+     *      ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @SWG\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Error while saving",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionUpdate(int $id): array
     {
@@ -155,11 +275,24 @@ class ProductController extends Controller
     }
 
     /**
-     * Deletes an existing Product model.
-     * If deletion is successful, the browser will return success status as JSON.
-     *
-     * @param int $id ID
-     * @return array
+     * @SWG\Post(path="/products/{id}/delete",
+     *     tags={"Product"},
+     *     summary="Deletes product",
+     *     @SWG\Parameter(
+     *         name="id",
+     *         in="path",
+     *         type="integer",
+     *         description="ID of the user",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Product collection response",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionDelete($id): array
     {

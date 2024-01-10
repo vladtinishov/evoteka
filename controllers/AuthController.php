@@ -23,11 +23,52 @@ class AuthController extends \yii\web\Controller
         ];
     }
 
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
+    /**
+     * @SWG\Post(
+     *     path="/auth/get-token",
+     *     tags={"Authentication"},
+     *     summary="Get JWT token",
+     *     description="Endpoint to get a JWT token by providing a valid login and password.",
+     *     @SWG\Parameter(
+     *         name="login",
+     *         in="formData",
+     *         type="string",
+     *         description="User login",
+     *         required=true,
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="formData",
+     *         type="string",
+     *         description="User password",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="JWT token is generated successfully",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="token", type="string", description="JWT token"),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=401,
+     *         description="Unauthorized. Invalid login or password.",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", description="Error message"),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", description="Error message"),
+     *         ),
+     *     )
+     * )
+     */
     public function actionGetToken()
     {
         try {
@@ -61,6 +102,71 @@ class AuthController extends \yii\web\Controller
         return JWT::encode($payload, $key, $_ENV['TOKEN_ENCODE_ALG']);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/auth/register",
+     *     tags={"Authentication"},
+     *     summary="Register a new user",
+     *     description="Endpoint to register a new user with the provided information.",
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="formData",
+     *         type="string",
+     *         description="User name",
+     *         required=true,
+     *     ),
+     *     @SWG\Parameter(
+     *         name="login",
+     *         in="formData",
+     *         type="string",
+     *         description="User login",
+     *         required=true,
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="formData",
+     *         type="string",
+     *         description="User password",
+     *         required=true,
+     *     ),
+     *     @SWG\Parameter(
+     *         name="role",
+     *         in="formData",
+     *         type="string",
+     *         description="User role",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="User is registered successfully",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="id", type="integer", description="User ID"),
+     *             @SWG\Property(property="name", type="string", description="User name"),
+     *             @SWG\Property(property="login", type="string", description="User login"),
+     *             @SWG\Property(property="role", type="string", description="User role"),
+     *             @SWG\Property(property="access_token", type="string", description="JWT token"),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=422,
+     *         description="Unprocessable Entity. Unable to save user. Validation failed.",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", description="Error message"),
+     *             @SWG\Property(property="errors", type="object", description="Validation errors"),
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @SWG\Schema(
+     *             type="object",
+     *             @SWG\Property(property="error", type="string", description="Error message"),
+     *         ),
+     *     )
+     * )
+     */
     public function actionRegister()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;

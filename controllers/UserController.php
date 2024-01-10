@@ -13,7 +13,19 @@ use yii\filters\VerbFilter;
 use yii\web\Response;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * @SWG\Tag(
+ *   name="Order",
+ *   description="Operations about orders"
+ * )
+ *
+ * @SWG\SecurityScheme(
+ *     securityDefinition="BearerAuth",
+ *     type="apiKey",
+ *     in="header",
+ *     name="Authorization",
+ *     description="Bearer {token}"
+ * )
+ * OrderController implements the CRUD actions for Order model.
  */
 class UserController extends Controller
 {
@@ -49,9 +61,18 @@ class UserController extends Controller
     }
 
     /**
-     * Lists all User models.
-     *
-     * @return array
+     * @SWG\Get(
+     *     path="/users",
+     *     tags={"User"},
+     *     summary="Retrieves the collection of User resources.",
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *     ),
+     *     security={
+     *         {"BearerAuth": {}}
+     *     }
+     * )
      */
     public function actionIndex(): array
     {
@@ -69,9 +90,24 @@ class UserController extends Controller
     }
 
     /**
-     * Displays a single User model.
-     * @param int $id ID
-     * @return array
+     * @SWG\Get(path="/users/{id}",
+     *     tags={"User"},
+     *     summary="Retrieves the collection of User resources.",
+     *     @SWG\Parameter(
+     *         name="id",
+     *         in="path",
+     *         type="integer",
+     *         description="ID of the user",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="User collection response",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionView($id): array
     {
@@ -85,12 +121,53 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new User model.
-     * If creation is successful, the browser will return the new product as JSON.
+     * @SWG\Post(
+     *    path="/users/create",
+     *    tags={"User"},
+     *    summary="Creates a new User",
+     *    description="If creation is successful, the browser will return the new user as JSON.",
+     *    @SWG\Parameter(
+     *        name="name",
+     *        in="formData",
+     *        type="string",
+     *        description="User's name",
+     *        required=true,
+     *    ),
+     *    @SWG\Parameter(
+     *        name="login",
+     *        in="formData",
+     *        type="string",
+     *        description="User's login",
+     *        required=true,
+     *    ),
+     *    @SWG\Parameter(
+     *        name="password",
+     *        in="formData",
+     *        type="string",
+     *        description="User's password",
+     *        required=true,
+     *    ),
+     *      @SWG\Parameter(
+     *         name="role",
+     *         in="formData",
+     *         type="integer",
+     *         description="User's role",
+     *         required=true,
+     *         enum={1, 2, 3},
+     *         @SWG\Items(
+     *             type="integer",
+     *             enum={1, 2, 3},
+     *         )
+     *     ),
      *
-     * @return array
-     * @throws \yii\base\Exception
-     * @throws \Exception
+*          @SWG\Response(
+ *          response = 200,
+ *          description = "User collection response",
+ *      ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionCreate(): array
     {
@@ -123,12 +200,59 @@ class UserController extends Controller
     }
 
     /**
-     * Updates an existing User model.
-     * If update is successful, the browser will return the updated product as JSON.
-     *
-     * @param int $id ID
-     * @return array
-     * @throws \yii\base\Exception
+     * @SWG\Post(
+     *    path="/users/{id}/update",
+     *    tags={"User"},
+     *    summary="Creates a new User",
+     *    description="If creation is successful, the browser will return the new user as JSON.",
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="integer",
+     *          description="ID of the user",
+     *          required=true,
+     *      ),
+     *    @SWG\Parameter(
+     *        name="name",
+     *        in="formData",
+     *        type="string",
+     *        description="User's name",
+     *        required=true,
+     *    ),
+     *    @SWG\Parameter(
+     *        name="login",
+     *        in="formData",
+     *        type="string",
+     *        description="User's login",
+     *        required=true,
+     *    ),
+     *    @SWG\Parameter(
+     *        name="password",
+     *        in="formData",
+     *        type="string",
+     *        description="User's password",
+     *        required=true,
+     *    ),
+     *      @SWG\Parameter(
+     *         name="role",
+     *         in="formData",
+     *         type="integer",
+     *         description="User's role",
+     *         required=true,
+     *         enum={1, 2, 3},
+     *         @SWG\Items(
+     *             type="integer",
+     *             enum={1, 2, 3},
+     *         )
+     *     ),
+     *          @SWG\Response(
+     *          response = 200,
+     *          description = "User collection response",
+     *      ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionUpdate(int $id): array
     {
@@ -167,11 +291,24 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will return success status as JSON.
-     *
-     * @param int $id ID
-     * @return array
+     * @SWG\Post(path="/users/{id}/delete",
+     *     tags={"User"},
+     *     summary="Retrieves the collection of User resources.",
+     *     @SWG\Parameter(
+     *         name="id",
+     *         in="path",
+     *         type="integer",
+     *         description="ID of the user",
+     *         required=true,
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="User collection response",
+     *     ),
+     *     security={
+     *          {"BearerAuth": {}}
+     *      }
+     * )
      */
     public function actionDelete($id): array
     {
