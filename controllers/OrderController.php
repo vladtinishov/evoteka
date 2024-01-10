@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Order;
 use app\models\OrderProduct;
+use app\models\User;
 use PHPUnit\Exception;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -80,10 +81,20 @@ class OrderController extends Controller
      */
     public function actionIndex(): array
     {
+        $user = Yii::$app->request->getQueryParam('user');
+        $user = new User($user);
+
         try {
-            $dataProvider = new ActiveDataProvider([
-                'query' => Order::find(),
-            ]);
+            $dataProvider = null;
+            if ($user->isClient()) {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => Order::find()->where(['user_id' => $user->id]),
+                ]);
+            } else {
+                $dataProvider = new ActiveDataProvider([
+                    'query' => Order::find()
+                ]);
+            }
 
             return $dataProvider->models;
         } catch (NotFoundHttpException $e) {
@@ -125,8 +136,12 @@ class OrderController extends Controller
      */
     public function actionView($id): array
     {
+        $user = Yii::$app->request->getQueryParam('user');
+        $user = new User($user);
+
         try {
-            return $this->findModel($id)->toArray();
+            $userId = $user->isClient() ? $user->id : null;
+            return $this->findModel($id, $userId)->toArray();
         } catch (NotFoundHttpException $e) {
             Yii::$app->response->statusCode = 404;
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -405,8 +420,12 @@ class OrderController extends Controller
      */
     public function actionDelete($id): array
     {
+        $user = Yii::$app->request->getQueryParam('user');
+        $user = new User($user);
+
         try {
-            $model = $this->findModel($id);
+            $userId = $user->isClient() ? $user->id : null;
+            $model = $this->findModel($id, $userId);
             $model->delete();
 
             return ['status' => 'success'];
@@ -424,9 +443,15 @@ class OrderController extends Controller
      * @return Order the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel(int $id): Order
+    protected function findModel(int $id, int $userId = null): Order
     {
-        if (($model = Order::findOne(['id' => $id])) !== null) {
+        $condition = ['id' => $id];
+
+        if ($userId !== null) {
+            $condition['user_id'] = $userId;
+        }
+
+        if (($model = Order::findOne($condition)) !== null) {
             return $model;
         }
 
