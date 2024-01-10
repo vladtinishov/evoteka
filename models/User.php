@@ -11,7 +11,7 @@ use Yii;
  * @property string $name
  * @property string|null $login
  * @property string $password_hash
- * @property string $role
+ * @property int $role
  *
  * @property Order[] $orders
  */
@@ -38,7 +38,7 @@ class User extends \yii\db\ActiveRecord
         return [
             [['name', 'password_hash', 'role'], 'required'],
             [['name', 'login'], 'string', 'max' => 50],
-            [['password_hash', 'role'], 'string', 'max' => 255],
+            [['password_hash'], 'string', 'max' => 255],
             [['login'], 'unique'],
         ];
     }

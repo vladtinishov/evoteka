@@ -114,7 +114,9 @@ class UserController extends Controller
                 return ['errors' => $model->errors];
             }
 
-            return $model->attributes;
+            $data = $model->attributes;
+            unset($data['password_hash']);
+            return $data;
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -149,7 +151,7 @@ class UserController extends Controller
             if ($name) $model->name = $name;
             if ($login) $model->login = $login;
             if ($password) $model->password_hash = Yii::$app->security->generatePasswordHash($password);
-            if ($role) $model->role = Yii::$app->security->generatePasswordHash($role);
+            if ($role) $model->role = $role;
 
             $model->save();
             if (count($model->errors)) {
@@ -158,7 +160,9 @@ class UserController extends Controller
                 return ['errors' => $model->errors];
             }
 
-            return $model->attributes;
+            $data = $model->attributes;
+            unset($data['password_hash']);
+            return $data;
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
             Yii::$app->response->format = Response::FORMAT_JSON;
