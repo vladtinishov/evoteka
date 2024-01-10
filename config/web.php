@@ -11,18 +11,34 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-//    'as tokenFilter' => [
-//        'class' => 'app\components\TokenMiddleware',
-//        'except' => ['auth/*'],
-//    ],
-//    'as adminFilter' => [
-//        'class' => 'app\components\AdminMiddleware',
-//        'except' => ['auth/*'],
-//    ],
-//    'as adminAndManagerFilter' => [
-//        'class' => 'app\components\AdminAndManagerMiddleware',
-//        'except' => ['auth/*'],
-//    ],
+    'as tokenFilter' => [
+        'class' => 'app\components\TokenMiddleware',
+        'except' => ['auth/*'],
+    ],
+    'as adminFilter' => [
+        'class' => 'app\components\AdminMiddleware',
+        'except' => [
+            'auth/*',
+            'product/index',
+            'product/view',
+            'order/create',
+            'order/index',
+            'order/view',
+            'user/view',
+            'user/index',
+        ],
+    ],
+    'as managerFilter' => [
+        'class' => 'app\components\ManagerMiddleware',
+        'except' => ['auth/*',
+            'auth/*',
+            'product/index',
+            'product/view',
+            'order/create',
+            'order/index',
+            'order/view',
+        ],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -61,20 +77,22 @@ $config = [
             'rules' => [
                 'auth/get-token' => 'auth/get-token',
                 'auth/register' => 'auth/register',
-                'users/index' => 'user/index',
 
                 'products' => 'product/index',
                 'products/create' => 'product/create',
+                'products/<id:\d+>' => 'product/view',
                 'products/<id:\d+>/update' => 'product/update',
                 'products/<id:\d+>/delete' => 'product/delete',
 
                 'orders' => 'order/index',
                 'orders/create' => 'order/create',
+                'orders/<id:\d+>' => 'order/view',
                 'orders/<id:\d+>/update' => 'order/update',
                 'orders/<id:\d+>/delete' => 'order/delete',
 
                 'users' => 'user/index',
                 'users/create' => 'user/create',
+                'users/<id:\d+>' => 'user/view',
                 'users/<id:\d+>/update' => 'user/update',
                 'users/<id:\d+>/delete' => 'user/delete',
             ],

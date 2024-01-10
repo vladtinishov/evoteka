@@ -10,7 +10,7 @@ use Yii;
 use yii\base\ActionFilter;
 use yii\web\Response;
 
-class AdminAndManagerMiddleware extends ActionFilter
+class ManagerMiddleware extends ActionFilter
 {
     public function beforeAction($action): bool
     {
