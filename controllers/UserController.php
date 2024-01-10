@@ -114,9 +114,7 @@ class UserController extends Controller
                 return ['errors' => $model->errors];
             }
 
-            $data = $model->attributes;
-            unset($data['password_hash']);
-            return $data;
+            return $model->toArray(['id', 'name', 'login', 'role']);
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -160,9 +158,7 @@ class UserController extends Controller
                 return ['errors' => $model->errors];
             }
 
-            $data = $model->attributes;
-            unset($data['password_hash']);
-            return $data;
+            return $model->toArray(['id', 'name', 'login', 'role']);
         } catch (Exception $e) {
             Yii::$app->response->statusCode = 500;
             Yii::$app->response->format = Response::FORMAT_JSON;
