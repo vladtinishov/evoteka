@@ -3,6 +3,15 @@
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
+$managerAccessExcepts = [
+    'auth/*',
+    'product/index',
+    'product/view',
+    'order/create',
+    'order/index',
+    'order/view',
+];
+
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
@@ -18,26 +27,15 @@ $config = [
     'as adminFilter' => [
         'class' => 'app\components\AdminMiddleware',
         'except' => [
-            'auth/*',
-            'product/index',
-            'product/view',
-            'order/create',
-            'order/index',
-            'order/view',
+            ...$managerAccessExcepts,
             'user/view',
             'user/index',
+            'order/update-status',
         ],
     ],
     'as managerFilter' => [
         'class' => 'app\components\ManagerMiddleware',
-        'except' => ['auth/*',
-            'auth/*',
-            'product/index',
-            'product/view',
-            'order/create',
-            'order/index',
-            'order/view',
-        ],
+        'except' => $managerAccessExcepts,
     ],
     'components' => [
         'request' => [
@@ -89,6 +87,7 @@ $config = [
                 'orders/<id:\d+>' => 'order/view',
                 'orders/<id:\d+>/update' => 'order/update',
                 'orders/<id:\d+>/delete' => 'order/delete',
+                'orders/<id:\d+>/update-status' => 'order/update-status',
 
                 'users' => 'user/index',
                 'users/create' => 'user/create',
