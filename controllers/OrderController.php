@@ -44,6 +44,7 @@ class OrderController extends Controller
                         'update' => ['POST'],
                         'index' => ['GET'],
                         'view' => ['GET'],
+                        'update-status' => ['POST'],
                     ],
                 ],
             ]
@@ -155,6 +156,44 @@ class OrderController extends Controller
             if (isset($requestData['products']) && is_array($requestData['products'])) {
                 OrderProduct::deleteAll(['order_id' => $model->id]);
                 $this->saveOrderProducts($requestData['products'], $model->id);
+            }
+
+            return $model->attributes;
+        } catch (Exception $e) {
+            Yii::$app->response->statusCode = 500;
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['error' => 'Error during saving.'];
+        }
+    }
+
+    /**
+     * Updates orders payment_status.
+     * If update is successful, the browser will return the updated product as JSON.
+     *
+     * @param int $id ID
+     * @return array
+     */
+    public function actionUpdateStatus(int $id): array
+    {
+        $requestData = Yii::$app->request->post();
+        $paymentStatus = $requestData['payment_status'] ?? 0;
+
+        try {
+            $model = $this->findModel($id);
+        } catch (NotFoundHttpException $e) {
+            Yii::$app->response->statusCode = 404;
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['error' => 'The requested resource does not exist.'];
+        }
+
+        if ($paymentStatus) $model->payment_status = $paymentStatus;
+
+        try {
+            $model->save();
+            if (count($model->errors)) {
+                Yii::$app->response->statusCode = 500;
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['errors' => $model->errors];
             }
 
             return $model->attributes;
