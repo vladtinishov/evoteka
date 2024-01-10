@@ -50,7 +50,7 @@ site/docs
 <p>Перед тем как юзать его методы нужно прописать Bearer token в Authorize</p>
 
 <p>
-Для этого нужно его получить через роут get-token (login: admin password: adminpassword
+Для этого нужно его получить через роут get-token (login: admin password: adminpassword)
 и прописать его при этом нужно указать "Bearer" перед ним (это не очень но у меня уже нет времени это исправить я почти два дня методы для сваггера настривал)
 </p>
 
